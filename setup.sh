@@ -10,5 +10,6 @@ cat << EOF > ~/.streamlit/config.toml
 [server]
 headless = true
 enableCORS = false
+enableXsrfProtection = false
 port = ${PORT}
 EOF
