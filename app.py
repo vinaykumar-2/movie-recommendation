@@ -5,10 +5,21 @@ import streamlit as st
 from dotenv import load_dotenv
 import os
 import time
+import gdown
 
 #load api()
 load_dotenv()
 API_KEY=os.getenv('api_key')
+
+# Step 1: Download .pkl files from Google Drive if not found locally
+MOVIES_URL = "https://drive.google.com/uc?id=1POGwLL769VpjE2vweaNcygaXn_Hz993M"
+SIMILARITY_URL = "https://drive.google.com/uc?id=1zUT8cHTlWFCHSeO1_ocjZi-FH9l8eGko"
+
+if not os.path.exists('movies.pkl'):
+    gdown.download(MOVIES_URL, 'movies.pkl', quiet=False)
+
+if not os.path.exists('similarity.pkl'):
+    gdown.download(SIMILARITY_URL, 'similarity.pkl', quiet=False)
 
 #Load data
 
@@ -31,9 +42,7 @@ def fetch_posters(movie_id):
         print(f"Could not load poster for movie ID {movie_id} : {e}")
         return "https://via.placeholder.com/500x750?text=No+Image"
 
-
-
-
+# Recommendation logic
 def recommend(movie):
     movie_index=movies[movies['title']==movie].index[0]
     distances= similarity[movie_index]
@@ -49,8 +58,7 @@ def recommend(movie):
         time.sleep(0.2)
     return recommended_movies,recommended_movie_path
 
-
-
+# Streamlit UI
 st.header("Movie Recommendation System")
 
 selected_movie=st.selectbox(
